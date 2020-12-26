@@ -1,3 +1,4 @@
+import 'package:exercise_tracker/graphql_provider.dart';
 import 'package:flutter/material.dart';
 
 import './screens/home/home_screen.dart';
@@ -10,24 +11,32 @@ void main() {
   runApp(MyApp());
 }
 
+const host = '192.168.1.65';
+
+final graphqlEndpoint = 'http://$host:4000/graphql';
+final subscriptionEndpoint = 'ws://$host:4000/subscriptions';
+
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primaryColor: generateHexColor("#5063EE"),
-        fontFamily: 'Rubik',
-        textTheme: ThemeData.light().textTheme.copyWith(),
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+    return ClientProvider(
+      uri: graphqlEndpoint,
+      subscriptionUri: graphqlEndpoint,
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primaryColor: generateHexColor("#5063EE"),
+          fontFamily: 'Rubik',
+          textTheme: ThemeData.light().textTheme.copyWith(),
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: HomeScreen(),
+        routes: {
+          RegisterScreen.routeName: (ctx) => RegisterScreen(),
+          LoginScreen.routeName: (ctx) => LoginScreen(),
+        },
       ),
-      home: HomeScreen(),
-      routes: {
-        RegisterScreen.routeName: (ctx) => RegisterScreen(),
-        LoginScreen.routeName: (ctx) => LoginScreen(),
-      },
     );
   }
 }
