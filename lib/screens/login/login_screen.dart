@@ -3,6 +3,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../../widgets/auth_screen.dart';
+import '../dashboard/dashboard_screen.dart';
 
 import '../../models/graphql/graphql_api.dart';
 import '../../providers/auth_provider.dart';
@@ -31,6 +32,13 @@ class _LoginScreenState extends State<LoginScreen> {
     runMutation(data.toJson());
   }
 
+  void _onCompleted(Login$Mutation$Login loginData) {
+    Provider.of<Auth>(context, listen: false)
+        .authenticate(loginData.accessToken, loginData.refreshToken);
+
+    Navigator.of(context).popUntil((route) => route.isFirst);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Mutation(
@@ -38,8 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
         documentNode: LoginMutation().document,
         onCompleted: (data) {
           final loginData = Login$Mutation$Login.fromJson(data['login']);
-          Provider.of<Auth>(context, listen: false)
-              .authenticate(loginData.accessToken, loginData.refreshToken);
+          _onCompleted(loginData);
         },
       )),
       builder: (
