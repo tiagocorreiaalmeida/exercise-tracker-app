@@ -10,7 +10,6 @@ class Auth with ChangeNotifier {
   String _refreshToken;
 
   bool get isAuth {
-    print("Here: " + (_accessToken != null).toString());
     return _accessToken != null;
   }
 
@@ -28,7 +27,6 @@ class Auth with ChangeNotifier {
   }
 
   Future<bool> tryToLoginBack() async {
-    print("called tryToLoginBack");
     final prefs = await SharedPreferences.getInstance();
     if (!prefs.containsKey(prefsAuthKey)) {
       return false;
