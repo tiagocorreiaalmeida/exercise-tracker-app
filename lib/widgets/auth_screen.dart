@@ -38,6 +38,10 @@ class _AuthScreenState extends State<AuthScreen> {
     'password': '',
   };
 
+  String get getAuthLabel {
+    return widget.isLogin ? "Sign In" : "Sign Up";
+  }
+
   void _onSubmit() {
     if (!_formKey.currentState.validate()) {
       // Invalid!
@@ -110,7 +114,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     bottom: 8,
                   ),
                   child: Text(
-                    "Sign Up",
+                    getAuthLabel,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 30,
@@ -171,7 +175,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   child: SizedBox(
                     width: 208,
                     child: ButtonGradient(
-                      text: "Sign Up",
+                      text: getAuthLabel,
                       onPress: widget.isLoading ? null : _onSubmit,
                     ),
                   ),

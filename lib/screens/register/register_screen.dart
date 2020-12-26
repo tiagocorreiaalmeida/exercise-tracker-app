@@ -1,8 +1,9 @@
-import 'package:exercise_tracker/models/graphql/graphql_api.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 import '../../widgets/auth_screen.dart';
+
+import '../../models/graphql/graphql_api.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const routeName = "/register";
@@ -18,7 +19,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     String password,
     String username,
   }) {
-    final RegisterArguments data = RegisterArguments(
+    final data = RegisterArguments(
       data: RegisterInput(email: email, password: password, username: username),
     );
 
@@ -38,8 +39,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           AuthScreen(
         isLoading: result.loading,
         isError: result.hasException,
-        error: result.exception != null &&
-                result.exception.graphqlErrors.length > 0
+        error: result.hasException && result.exception.graphqlErrors != null
             ? result.exception.graphqlErrors[0].message
             : null,
         isSuccess: result.data != null,
