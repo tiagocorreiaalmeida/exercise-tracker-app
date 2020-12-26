@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:form_validator/form_validator.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import './button_gradient.dart';
 
@@ -8,10 +9,22 @@ import '../utils/get_computed_line_height.dart';
 
 class AuthScreen extends StatefulWidget {
   final bool isLogin;
+  final bool isLoading;
+  final bool isError;
+  final bool isSuccess;
+  final String error;
+
   final void Function({String email, String password, String username})
       onSubmit;
 
-  const AuthScreen({this.isLogin = false, this.onSubmit});
+  const AuthScreen({
+    this.isLogin = false,
+    this.onSubmit,
+    this.isLoading,
+    this.isError,
+    this.isSuccess,
+    this.error,
+  });
 
   @override
   _AuthScreenState createState() => _AuthScreenState();
@@ -38,6 +51,20 @@ class _AuthScreenState extends State<AuthScreen> {
       password: _authData['password'],
       username: _authData['username'],
     );
+  }
+
+  @override
+  void didUpdateWidget(covariant AuthScreen oldWidget) {
+    if (widget.isError || (widget.isSuccess && !widget.isLogin)) {
+      final message =
+          widget.isError ? widget.error : "Account registered with success";
+
+      Fluttertoast.showToast(
+        msg: message,
+      );
+    }
+
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -143,7 +170,10 @@ class _AuthScreenState extends State<AuthScreen> {
                   alignment: Alignment.bottomRight,
                   child: SizedBox(
                     width: 208,
-                    child: ButtonGradient(text: "Sign Up", onPress: _onSubmit),
+                    child: ButtonGradient(
+                      text: "Sign Up",
+                      onPress: widget.isLoading ? null : _onSubmit,
+                    ),
                   ),
                 ),
               ],
